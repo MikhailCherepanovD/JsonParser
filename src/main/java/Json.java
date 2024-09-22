@@ -2,6 +2,7 @@ import model.JsonArray;
 import model.JsonObject;
 import model.JsonValue;
 
+import java.util.List;
 import java.util.Map;
 
 public class Json {
@@ -9,7 +10,7 @@ public class Json {
     private static final ObjectMapper mapper = new ObjectMapper();
 
     // Read JSON string to JsonArray
-    public static JsonArray parseArray(String input) {
+    public static JsonArray parseJsonArray(String input) {
         JsonTokenizer tokenizer = new JsonTokenizer(input);
         JsonParser<JsonValue> parser = new JsonParser<>(tokenizer, new JsonObserver());
         return (JsonArray) parser.parse();
@@ -27,6 +28,13 @@ public class Json {
         JsonTokenizer tokenizer = new JsonTokenizer(input);
         JsonParser<Object> parser = new JsonParser<>(tokenizer, new PlainObserver());
         return (Map<String, Object>) parser.parse();
+    }
+
+    // Read JSON string to List<>
+    public static List<Object> parseArray(String input) {
+        JsonTokenizer tokenizer = new JsonTokenizer(input);
+        JsonParser<Object> parser = new JsonParser<>(tokenizer, new PlainObserver());
+        return (List<Object>) parser.parse();
     }
 
     // Read JSON string to specified class
