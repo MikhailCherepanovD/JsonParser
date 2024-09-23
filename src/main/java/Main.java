@@ -32,6 +32,9 @@ public class Main {
         h2.friend = h1;
         System.out.println(Json.from(h2));
 
+
+
+
         Hero hero3 = Json.parseObject("""
                 {"armor": 2, "friend": {"armor": -1, "friend": null, "weights": [100.0, 0.5]}, "weights": [0.5, 12.0, 0.0]}
                                 """, Hero.class);

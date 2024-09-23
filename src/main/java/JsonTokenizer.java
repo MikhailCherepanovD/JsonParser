@@ -44,6 +44,7 @@ class JsonTokenizer implements Iterator<JsonToken> {
             )""", Pattern.COMMENTS);
 
     public JsonTokenizer(String input) {
+
         this.matcher = TOKEN.matcher(input);
     }
 

@@ -15,7 +15,7 @@ class JsonParser<T> {
         TrueSetValue;
     }
 
-    interface Observer<T> extends BiConsumer<Action, JsonTokenizer> {
+    interface Observer<T> extends BiConsumer<Action, JsonTokenizer> {   // позволяет принимать два аргумента и не возвращать значений
         T result();
     }
 
@@ -41,6 +41,7 @@ class JsonParser<T> {
 
     private static final JsonToken END = null;
 
+    // implements Comparable<LookupKey> - значит, что объекты этого класса можно сравнивать
     private static class LookupKey implements Comparable<LookupKey> {
         NonTerminal nonTerminal;
         JsonToken terminal;
@@ -66,7 +67,7 @@ class JsonParser<T> {
         }
 
     }
-
+    //
     private static final Map<LookupKey, List<Object>> lookupTable;
 
     static {
@@ -117,10 +118,13 @@ class JsonParser<T> {
 
     T parse() {
         Deque<Object> stack = new ArrayDeque<>();
-        var key = new LookupKey();
+        //В стеке хронятся либо терминалы либо нетерминалы
+        var key = new LookupKey(); // ключ для поиска в lookUp table
+
         stack.push(JsonToken.End);
         stack.push(NonTerminal.Value);
         JsonToken token = tokenizer.next();
+
         while (!stack.isEmpty() && tokenizer.hasNext()) {
             if (stack.getFirst() instanceof Action action) {
                 observer.accept(action, tokenizer);

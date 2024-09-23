@@ -10,7 +10,6 @@ class JsonObserver implements JsonParser.Observer<JsonValue> {
     public JsonValue result() {
         return stack.pop();
     }
-
     @Override
     public void accept(JsonParser.Action action, JsonTokenizer tokenizer) {
         switch (action) {
