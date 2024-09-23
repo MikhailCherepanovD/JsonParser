@@ -10,7 +10,9 @@ public class JsonArray implements JsonValue {
     public JsonArray(List<JsonValue> elements) {
         this.elements = elements;
     }
-
+    public List<JsonValue> getListOfJsonValues(){
+        return elements;
+    }
     @Override
     public String toString() {
         final var joiner = new StringJoiner(", ", "[", "]");

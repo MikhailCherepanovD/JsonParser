@@ -37,6 +37,6 @@ Each of them represents a data type stored in JSON format.
 **ObjectMapper:** A class that transforms JSON objects into Java objects and vice versa.
 
 
-Examples of using:
+**Examples of using:**
 
 In class Main.
