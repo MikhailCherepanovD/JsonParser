@@ -10,7 +10,12 @@ import java.util.regex.Pattern;
 class JsonTokenizer implements Iterator<JsonToken> {
 
     private final Matcher matcher;
-
+    String contentsCoded; // Будет храниться строка текущего значения
+    String num;// будет храниться число текущего значения
+    // группы номеруются в порядке обхода в глубину
+    //Первая группа - вспомогательные символы
+    //Вторая - строки
+    //Третья - числа
     private static final Pattern TOKEN = Pattern.compile("""
             \\s*    # пробелы -> игнорим
             (# группа #1
@@ -36,6 +41,7 @@ class JsonTokenizer implements Iterator<JsonToken> {
              | ,     # COMMA
             )""", Pattern.COMMENTS);
 
+
     private static final Pattern CHARACTER = Pattern.compile("""
             (?: 
               ([^"\\\\])             # character          # группа #1
@@ -48,8 +54,8 @@ class JsonTokenizer implements Iterator<JsonToken> {
         this.matcher = TOKEN.matcher(input);
     }
 
-    String contentsCoded;
-    JsonString getString() {
+
+    protected JsonString getString() {
         StringBuilder result = new StringBuilder(contentsCoded.length());
         Matcher matcherChar = CHARACTER.matcher(contentsCoded);
         while (matcherChar.find()) {
@@ -75,9 +81,9 @@ class JsonTokenizer implements Iterator<JsonToken> {
         return new JsonString(result.toString());
     }
 
-    String num;
 
-    JsonNumber getNumber() {
+
+    protected JsonNumber getNumber() {
         try {
             int integer = Integer.parseInt(num);
             return new JsonNumber(integer);

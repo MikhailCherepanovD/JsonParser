@@ -10,6 +10,9 @@ public class JsonString implements JsonValue {
 
     // реализовано в соответствии с https://ecma-international.org/wp-content/uploads/ECMA-404_2nd_edition_december_2017.pdf
     // раздел 9 String
+/*    Символы, такие как двойные кавычки и обратные слэши, экранируются, чтобы избежать ошибок в формате JSON.
+   Символы с кодами от 0 до 31 заменяются на их шестнадцатеральные эквиваленты,
+    чтобы гарантировать, что они правильно интерпретируются в JSON.*/
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder(content.length());

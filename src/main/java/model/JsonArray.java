@@ -15,7 +15,7 @@ public class JsonArray implements JsonValue {
     }
     @Override
     public String toString() {
-        final var joiner = new StringJoiner(", ", "[", "]");
+        final var joiner = new StringJoiner(", ", "[", "]");// соединяет в формате массива
         for (JsonValue element : elements) {
             joiner.add(element.toString());
         }

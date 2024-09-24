@@ -4,15 +4,15 @@ import java.util.function.BiConsumer;
 // LL-1 парсер JSON c семантическими действиями
 class JsonParser<T> {
     enum Action {
-        AddElement,
-        CreateArray,
+        AddElement,  // добавляет элемент в массив
+        CreateArray,  // создает массив и помещает в стек
         CreateObject,
-        FalseSetValue,
+        FalseSetValue, // помещает литерал null на вершину стека
         NullSetValue,
         NumberSetValue,
-        PutEntry,
-        StringSetValue,
-        TrueSetValue;
+        PutEntry, // берет значение и ключ со стека и помещает в объект Json
+        StringSetValue, //
+        TrueSetValue; //
     }
 
     interface Observer<T> extends BiConsumer<Action, JsonTokenizer> {   // позволяет принимать два аргумента и не возвращать значений
@@ -20,7 +20,7 @@ class JsonParser<T> {
     }
 
     private final JsonTokenizer tokenizer;
-    private final Observer<T> observer;
+    private final Observer<T> observer;// тут может быть либо JsonObserver или plainObserver
 
     /*
      * Value -> beginObject Object endObject | beginArray Array endArray | string | number | null | false | true
@@ -70,6 +70,7 @@ class JsonParser<T> {
     //
     private static final Map<LookupKey, List<Object>> lookupTable;
 
+    //создание lookup table
     static {
         Map<LookupKey, List<Object>> m = new TreeMap<>();
         m.put(new LookupKey(NonTerminal.Value, JsonToken.ObjectBegin), List.of(
@@ -117,25 +118,29 @@ class JsonParser<T> {
     }
 
     T parse() {
+
         Deque<Object> stack = new ArrayDeque<>();
-        //В стеке хронятся либо терминалы либо нетерминалы
+        //В стеке хронятся либо терминалы, либо нетерминалы, либо действия
         var key = new LookupKey(); // ключ для поиска в lookUp table
 
-        stack.push(JsonToken.End);
-        stack.push(NonTerminal.Value);
-        JsonToken token = tokenizer.next();
+        stack.push(JsonToken.End); //
+        stack.push(NonTerminal.Value); //
+        JsonToken token = tokenizer.next(); // ObjectBegin
 
         while (!stack.isEmpty() && tokenizer.hasNext()) {
+            //Если верхний элемент стека — это действие (экземпляр Action), оно принимается наблюдателем, и элемент удаляется из стека.
             if (stack.getFirst() instanceof Action action) {
                 observer.accept(action, tokenizer);
                 stack.pop();
                 continue;
             }
-            if (token == stack.getFirst()) {
+            //Если текущий токен совпадает с верхним элементом стека, верхний элемент удаляется, и берется следующий токен из токенизатора.
+            if (token == stack.getFirst()) {  // stack.getFirst() -
                 stack.pop();
                 token = tokenizer.next();
                 continue;
             }
+            //Если верхний элемент стека — это токен (не действие и не нетерминал), выбрасывается исключение, указывающее на неожиданный токен.
             if (stack.getFirst() instanceof JsonToken topToken) {
                 throw new JsonException("Unexpected token " + topToken);
             }
@@ -146,7 +151,7 @@ class JsonParser<T> {
                 throw new JsonException("Unexpected token " + token);
             }
             for (var symbol : rightHandSide.reversed()) {
-                stack.push(symbol);
+                stack.push(symbol);// кладем правую часть продукции в обратном порядке
             }
         }
         return observer.result();

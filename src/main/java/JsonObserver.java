@@ -11,7 +11,7 @@ class JsonObserver implements JsonParser.Observer<JsonValue> {
         return stack.pop();
     }
     @Override
-    public void accept(JsonParser.Action action, JsonTokenizer tokenizer) {
+    public void accept(JsonParser.Action action, JsonTokenizer tokenizer) {//
         switch (action) {
                 case AddElement -> {
                     var value = stack.pop();
@@ -25,7 +25,7 @@ class JsonObserver implements JsonParser.Observer<JsonValue> {
                 case PutEntry -> {
                     var value = stack.pop();
                     var key = ((JsonString) stack.pop()).content;
-                    (((JsonObject) stack.getFirst())).entries.put(key, value);
+                    (((JsonObject) stack.getFirst())).entries.put(key, value); //  ключ -JsonString
                 }
                 case StringSetValue -> stack.push(tokenizer.getString());
                 case TrueSetValue -> stack.push(JsonLiteral.True);

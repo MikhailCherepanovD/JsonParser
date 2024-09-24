@@ -15,16 +15,16 @@ public class Main {
         """);
         System.out.println(jsonObject1);
 
+
+
         // из строки в Map объектов
         System.out.println("\nExample2: ");
         Map<String, Object> parsedObject1 = Json.parseObject("""
-            { "str": "str1", "array":  [1,2,3,"four"], "object" : {"name": "Alex","age":30} }
+            { "str": "str1", "value": "123"  }
         """);
         for (Map.Entry<String, Object> entry : parsedObject1.entrySet()){
             System.out.println( entry.getKey() + ": "+ entry.getValue());
         }
-
-
 
         // из POJO в JsonObject
         System.out.println("\nExample3: ");
@@ -45,7 +45,9 @@ public class Main {
         p2.age = 20;
         p1.friend = p2;
         JsonValue jsonObject2 = Json.from(p1);
+
         System.out.println(jsonObject2);
+
 
 
         // из String в POJO
@@ -61,13 +63,15 @@ public class Main {
         System.out.println("\nExample5: ");
 
         List<Object> objectList= Json.parseArray("""
-                [{"values": [1, 2, 3, 4], "name": "Alex", "friend": {"values": null, "name": "Ivan", "friend": null, "age": 20}, "age": 10},
+                [{"values0": null, "name0": "Alex0"},
                 {"values": null, "name": "Alex", "friend": null, "age": 10}]
                 """);
         JsonValue jsonObject4 = Json.from(objectList.get(0));
         System.out.println(jsonObject4);
         JsonValue jsonObject5 = Json.from(objectList.get(1));
         System.out.println(jsonObject5);
+
+
 
         // из String в JsonArray
         System.out.println("\nExample6: ");
